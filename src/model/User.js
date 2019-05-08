@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema(
     livros: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book"}]
     });
     
-    UserSchema.pre("save", async function hashPassword(next){
+    UserSchema.pre("save", async function hashPassword(next){m
         //criptografar a password antes de salvar
     })
 
