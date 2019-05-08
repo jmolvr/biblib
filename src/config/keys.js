@@ -1,5 +1,6 @@
 module.exports = {
     mongodb: "",
     googleClientID: "",
-    googleClientIDSecret: ""
+    googleClientIDSecret: "",
+    goodReadskey: "2Dod2Bovub0gcqMOjfJFA"
 }

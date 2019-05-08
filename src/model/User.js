@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-
-const User = new mongoose.Schema(
+const 
+const UserSchema = new mongoose.Schema(
     {
-        nome: {
+        username: {
             type: String,
             required: true
         },
@@ -10,8 +10,20 @@ const User = new mongoose.Schema(
             type:String,
             required: false
         },
-    livros: [{ type: mongoose.Schema.Types.ObjectId, ref: "Livro"}]
-    }
-);
+        password :{
+            type: String,
+        },
+        email : {
+            type: String,
+            unique: true,
+            required: true,
+            lowercase: true,
+        },
+    livros: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book"}]
+    });
+    
+    UserSchema.pre("save", async function hashPassword(next){
+        //criptografar a password antes de salvar
+    })
 
-module.exports = mongoose.model("User", User)
+module.exports = mongoose.model("User", UserSchema);
