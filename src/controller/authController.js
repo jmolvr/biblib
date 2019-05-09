@@ -30,16 +30,10 @@ class AuthController{
     }
     
     async login(req, res, next){
-        console.log('To sendo chamado');
         passport.authenticate('local', {session: false}, (err, user, info) => {
-            console.log(err);
             if(err || !user){
-                return res.status(400).json({
-                    message: 'Something is not right',
-                    user: user
-                });
+                return res.status(400).json(info);
             }
-            console.log("Olá, finalmente");
             req.login(user, {session: false}, (err) => {
                 if(err){
                     return res.send(err);

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-
+const keys = require('../config/keys');
 const UserSchema = new mongoose.Schema(
     {
         username: {
@@ -34,6 +34,20 @@ const UserSchema = new mongoose.Schema(
         this.password = hash;
 
         next();
-    })  
+    });
+
+    UserSchema.methods = {
+        compareHash(hash){
+            return bcrypt.compare(hash, this.password);
+        },
+
+        generateToken() {
+            return jwt.sign({
+                id: user.id
+            }, keys.jwt, {
+                expiresIn: 86400
+            });
+        }
+    }
 
 module.exports = mongoose.model("User", UserSchema);

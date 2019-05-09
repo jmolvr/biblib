@@ -10,15 +10,17 @@ const keys = require('../config/keys');
 passport.use(
      new LocalStrategy({usernameField: 'email'}, async (email, password, done) => {
         try{
-            const user = await User.findOne({ email: email});
+            const user = await User.findOne({ email: email}).select('+password');
             if(!user){
                 return done(null, false, { msg: "O email não está registrado"});
             }
 
-            if(await !bcrypt.compare(password, user.password)){
+            if(!(await user.compareHash(password))){
                 return done(null, false, {msg: "Senha incorreta"});
             }
-
+            
+            user.password = undefined;
+            
             return done(null, user);
         }catch(err){
             return done(err);

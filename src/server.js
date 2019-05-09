@@ -8,7 +8,7 @@ const app = express();
 mongoose.connect(keys.mongoDB, { useNewUrlParser: true})
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.log(err));
-app.use(passport.initialize());
+//app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(require('./routes/routes'));
