@@ -6,15 +6,14 @@ const User = require('../model/User');
 
 class AuthController{
     async register(req, res){
-        console.log(req.body)
         const {email, password, password2, username} = req.body;   
         try{
             if( await User.findOne( {email })){
-                res.status(400).json( { error: "Usuário já existe"});
+               return res.status(400).json( { error: "Usuário já existe"});
             }
             
             if ( password !== password2){
-                res.status(400).json({ error: "As senhas são diferentes"});
+                return res.status(400).json({ error: "As senhas são diferentes"});
             }
 
             const user = await User.create( {
@@ -22,11 +21,12 @@ class AuthController{
                 password: password,
                 username: username,
             });
-            user.password = undefined;
+            
+            user.password = undefined; 
+
             return res.json( { user });
         }catch (err) {
-            console.log(err);
-            res.status(400).json({ error: "Registro falhou"});
+            return res.status(400).json({ error: "Registro falhou"});
         }
     }
     
