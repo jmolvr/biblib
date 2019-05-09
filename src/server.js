@@ -1,11 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const keys = require('./config/keys');
 
 const app = express();
 
-mongoose.connect('mongodb+srv://guaribati:<password>@cluster0-pgacx.mongodb.net/test?retryWrites=true', 
-    {useNewUrlParser: true}
-);
+mongoose.connect(keys.mongoDB, { useNewUrlParser: true})
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => console.log(err));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
