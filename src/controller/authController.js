@@ -1,8 +1,7 @@
-//Aqui ficarão as rotas referentes à login, logout e talvez criação de user
-//Projeto do rocketseat o registro de novos clientes fica aqui
-const mongoose = require('mongoose');
-
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
 const User = require('../model/User');
+const keys = require('../config/keys');
 
 class AuthController{
     async register(req, res){
@@ -30,8 +29,27 @@ class AuthController{
         }
     }
     
-    async login(req, res){
-    
+    async login(req, res, next){
+        console.log('To sendo chamado');
+        passport.authenticate('local', {session: false}, (err, user, info) => {
+            console.log(err);
+            if(err || !user){
+                return res.status(400).json({
+                    message: 'Something is not right',
+                    user: user
+                });
+            }
+            console.log("Olá, finalmente");
+            req.login(user, {session: false}, (err) => {
+                if(err){
+                    return res.send(err);
+                }
+                const token = jwt.sign({id: user.id }, keys.jwt, {
+                    expiresIn: 86400
+                });
+                return res.json({user, token});
+            });
+        })(req, res);
     }
 }
 
