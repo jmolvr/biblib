@@ -12,4 +12,5 @@ mongoose.connect(keys.mongoDB, { useNewUrlParser: true})
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(require('./routes/routes'));
+app.use('/auth',require('./routes/auth_routes.js'));
 app.listen(3333);

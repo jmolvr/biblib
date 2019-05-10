@@ -5,12 +5,12 @@ const keys = require('../config/keys');
 
 class AuthController{
     async register(req, res){
-        const {email, password, password2, username} = req.body;   
+        const {email, password, password2, username} = req.body;
         try{
             if( await User.findOne( {email })){
                return res.status(400).json( { error: "Usuário já existe"});
             }
-            
+
             if ( password !== password2){
                 return res.status(400).json({ error: "As senhas são diferentes"});
             }
@@ -20,7 +20,6 @@ class AuthController{
                 password: password,
                 username: username,
             });
-            
             user.password = undefined; 
 
             return res.json( { user });
