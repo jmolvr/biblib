@@ -1,12 +1,34 @@
 const express = require('express');
 const passport = require('passport');
-const routes = express.Router();
-const AuthController = require('../controller/authController');
+const router = express.Router();
 
-routes.post("/register", AuthController.register);
+router.use(passport.authenticate('jwt', {session:false})); //verifica se o user está logado;
 
-routes.post("/login", AuthController.login);
-routes.get('/testeAutenticacao', passport.authenticate('jwt', {session: false}), (req, res) =>{
-    res.json({teste: "logado"});
+router.get('/books', (req, res) => {
+    //Função para receber dados dos livros.
+    res.json({msg: "/books(GET)"});
 });
-module.exports = routes;
+
+router.post('/books', (req, res) => {
+    //Função para enviar dados dos livros.
+    res.json({msg: "/books(POST)"});
+});
+
+
+router.put('/books', (req, res) => {
+    //Função para atualizar livros.
+    res.json({msg: "/books(PUT)"});
+});
+
+
+router.get('/user', (req, res) => {s
+    //retorna usuário
+    res.json(req.user);
+});
+
+router.put('/user', (req, res) => {
+    res.json({msg: "/user(PUT)"});
+});
+
+
+module.exports = router;

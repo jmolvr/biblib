@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const findOrCreate = require('mongoose-findorcreate');
 const bcrypt = require('bcryptjs');
 const keys = require('../config/keys');
 const UserSchema = new mongoose.Schema(
@@ -7,13 +8,16 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        googleID:{
+            type: String,
+            select: false,
+        },
         descricao: {
             type:String,
             required: false
         },
         password :{
             type: String,
-            required: true,
             select: false,
         },
         email : {
@@ -30,6 +34,7 @@ const UserSchema = new mongoose.Schema(
     });
     
     UserSchema.pre("save", async function (next) {
+        if(this.password == undefined) next();
         const hash = await bcrypt.hash(this.password, 10);
         this.password = hash;
 
@@ -44,10 +49,12 @@ const UserSchema = new mongoose.Schema(
         generateToken() {
             return jwt.sign({
                 id: user.id
-            }, keys.jwt, {
+            }, process.env.secret || keys.jwt, {
                 expiresIn: 86400
             });
         }
     }
+
+    UserSchema.plugin(findOrCreate);
 
 module.exports = mongoose.model("User", UserSchema);
