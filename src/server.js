@@ -5,7 +5,7 @@ const keys = require('./config/keys');
 require('./config/passport-setup');
 
 const app = express();
-app.use(cors);
+app.use(cors());
 
 mongoose.connect(process.env.mongoDB || keys.mongoDB, { useNewUrlParser: true})
     .then(() => console.log("MongoDB connected"))
