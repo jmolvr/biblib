@@ -21,7 +21,7 @@ router.put('/books', (req, res) => {
 });
 
 
-router.get('/user', (req, res) => {s
+router.get('/user', (req, res) => {
     //retorna usuário
     res.json(req.user);
 });

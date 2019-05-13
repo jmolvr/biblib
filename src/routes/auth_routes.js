@@ -16,6 +16,6 @@ router.get("/google", passport.authenticate('google', {
 }));
 
 //callback for google strategy
-router.get('/google/redirect',AuthController.googleStrategy);
+router.get('/google/redirect', AuthController.googleStrategy);
 
 module.exports = router;
