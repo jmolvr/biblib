@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-
+const User = require('../model/User');
 router.use(passport.authenticate('jwt', {session:false})); //verifica se o user está logado;
 
 router.get('/books', (req, res) => {
@@ -9,9 +9,13 @@ router.get('/books', (req, res) => {
     res.json({msg: "/books(GET)"});
 });
 
-router.post('/books', (req, res) => {
-    //Função para enviar dados dos livros.
-    res.json({msg: "/books(POST)"});
+router.post('/books', async (req, res) => {
+    const user= await User.findById(req.user._id);
+    const book = await book.create({
+        bookID: req.bookID,
+    })
+    await user.livros.push(book);
+    res.json(book);
 });
 
 

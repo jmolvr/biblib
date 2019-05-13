@@ -23,7 +23,7 @@ passport.use(
                 }
                 
                 user.password = undefined;
-                
+                user.populate('livros');
                 return done(null, user);
             }catch(err){
                 return done(err);
@@ -48,6 +48,7 @@ passport.use(
                 console.log(err);
                 return done(err);
             }
+            user.populate('livros');
             return done(null, user);
         })
     })
@@ -62,6 +63,7 @@ passport.use(
     (jwtPayload, cb) => {
         return User.findById(jwtPayload.id)
         .then(user => {
+            user.populate('livros');
             return cb(null, user);
         })
         .catch(err => {
