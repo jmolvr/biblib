@@ -13,13 +13,15 @@ router.get('/books', (req, res) => {
 router.post('/books', async (req, res) => {
     //Função para enviar dados dos livros.
     const user = await User.findById(req.user._id);
+    //console.log(user);
+    console.log(req);
     const book = await Book.create({
-        bookID: req.bookID,
+        bookID: req.body.bookID,
         pagina_atual: 0,
         status: 0
     });
 
-    user.push(book);
+    user.livros.push(book);
     await user.save();
     return res.json(book);
 });
