@@ -1,6 +1,9 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
+const buscarLivro = require('../controller/sugestao.js');
+
+router.post('/sugestao', buscarLivro.gerarSugestao);
 
 router.use(passport.authenticate('jwt', {session:false})); //verifica se o user está logado;
 
