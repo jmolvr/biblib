@@ -3,7 +3,7 @@ var requestBook = require('../config/axios.js');
 class Sugestao {
 
     async gerarSugestao(req, res) {
-        id = ['NjUQCwAAQBAJ', 'JMKbBAAAQBAJ', 'I1wR6d_HO1AC'];
+        let id = ['NjUQCwAAQBAJ', 'JMKbBAAAQBAJ', 'I1wR6d_HO1AC'];
         let encontros = {id: new Array()};
         for (let i = 0; i < 4; i++) {
             let random = Math.floor((Math.random() * id.length));
