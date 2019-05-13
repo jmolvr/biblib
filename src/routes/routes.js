@@ -10,13 +10,9 @@ router.get('/books', (req, res) => {
     res.json({msg: "/books(GET)"});
 });
 
-router.post('/books', async (req, res) => {
-    const user= await User.findById(req.user._id);
-    const book = await Book.create({
-        bookID: req.bookID,
-    })
-    await user.livros.push(book);
-    res.json(book);
+router.post('/books', (req, res) => {
+    //Função para enviar dados dos livros.
+    res.json({msg: "/books(POST)"});
 });
 
 
