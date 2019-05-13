@@ -7,11 +7,11 @@ const BookSchema = new mongoose.Schema(
             required:true,
         },
         pagina_atual: {
-            type: Integer,
+            type: Number,
             required: true
         },
         status:{
-            type: Integer,
+            type: Number,
             required: true,
         }, 
     }
