@@ -3,6 +3,8 @@ const passport = require('passport');
 const router = express.Router();
 const User = require('../model/User');
 const Book = require('../model/Book');
+const BookController = require('../controller/bookController');
+
 router.use(passport.authenticate('jwt', {session:false})); //verifica se o user está logado;
 
 router.get('/books', (req, res) => {
@@ -10,21 +12,7 @@ router.get('/books', (req, res) => {
     res.json({msg: "/books(GET)"});
 });
 
-router.post('/books', async (req, res) => {
-    //Função para enviar dados dos livros.
-    const user = await User.findById(req.user._id);
-    //console.log(user);
-    console.log(req);
-    const book = await Book.create({
-        bookID: req.body.bookID,
-        pagina_atual: 0,
-        status: 0
-    });
-
-    user.livros.push(book);
-    await user.save();
-    return res.json(book);
-});
+router.post('/book', BookController.registerBook);
 
 
 router.put('/books', (req, res) => {
