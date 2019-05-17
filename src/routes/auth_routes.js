@@ -10,12 +10,13 @@ router.post("/register", AuthController.register);
 router.get("/login", AuthController.login);
 
 router.get("/logout");
+
 router.get("/google", passport.authenticate('google', {
     session: false,
     scope: ['profile', 'email']
 }));
 
 //callback for google strategy
-router.get('/google/redirect',AuthController.googleStrategy);
+router.get('/google/redirect', AuthController.googleStrategy);
 
 module.exports = router;

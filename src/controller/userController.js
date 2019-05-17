@@ -21,8 +21,11 @@ class AuthController{
                 username: username,
             });
             user.password = undefined; 
-
-            return res.json( { user });
+            //user.generateToken();
+            const token = jwt.sign({id: user.id }, process.env.secret || keys.jwt, {
+                expiresIn: 86400
+            });
+            return res.json( { user , token});
         }catch (err) {
             return res.status(400).json({ error: "Registro falhou"});
         }

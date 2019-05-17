@@ -47,8 +47,9 @@ const UserSchema = new mongoose.Schema(
         },
 
         generateToken() {
+            console.log("Estou sendo chamado");
             return jwt.sign({
-                id: user.id
+                id: this.id
             }, process.env.secret || keys.jwt, {
                 expiresIn: 86400
             });

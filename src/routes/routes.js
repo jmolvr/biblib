@@ -1,9 +1,11 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const buscarLivro = require('../controller/sugestao.js');
 
-router.post('/sugestao', buscarLivro.gerarSugestao);
+const User = require('../model/User');
+const Book = require('../model/Book');
+const BookController = require('../controller/bookController');
+const buscarLivro = require('../controller/sugestao.js');
 
 router.use(passport.authenticate('jwt', {session:false})); //verifica se o user está logado;
 
@@ -12,10 +14,7 @@ router.get('/books', (req, res) => {
     res.json({msg: "/books(GET)"});
 });
 
-router.post('/books', (req, res) => {
-    //Função para enviar dados dos livros.
-    res.json({msg: "/books(POST)"});
-});
+router.post('/book', BookController.registerBook);
 
 
 router.put('/books', (req, res) => {
@@ -23,6 +22,7 @@ router.put('/books', (req, res) => {
     res.json({msg: "/books(PUT)"});
 });
 
+router.post('/sugestao', buscarLivro.gerarSugestao);
 
 router.get('/user', (req, res) => {
     //retorna usuário

@@ -2,31 +2,18 @@ const mongoose = require("mongoose");
 
 const BookSchema = new mongoose.Schema(
     {
-        titulo: {
-            type: String,
-            required: true,
-        },
-        autor: {
-            type: String,
-        },
-        paginas: {
-            type: Integer,
+        bookID:{
+            type:String,
+            required:true,
         },
         pagina_atual: {
-            type: Integer,
+            type: Number,
             required: true
         },
         status:{
-            type: Integer,
+            type: Number,
             required: true,
-        },
-        img: {
-            type: String,
-        },
-
-        ISBN: {
-            type: String,
-        }
+        }, 
     }
 );
 
