@@ -3,11 +3,11 @@ var requestBook = require('../config/axios.js');
 class Sugestao {
 
     async gerarSugestao(req, res) {
-        let id = ['NjUQCwAAQBAJ', 'JMKbBAAAQBAJ', 'I1wR6d_HO1AC'];
+    //    let id = ['NjUQCwAAQBAJ', 'JMKbBAAAQBAJ', 'I1wR6d_HO1AC'];
         let encontros = {id: new Array()};
         for (let i = 0; i < 4; i++) {
-            let random = Math.floor((Math.random() * id.length));
-            let livro = await Sugestao.buscar(id[random]);
+            let random = Math.floor((Math.random() * res.livros.length));
+            let livro = await Sugestao.buscar(res.livros[random]);
             if (livro !== 1) {
                 let author = livro[0].volumeInfo.authors;
                 let title = livro[0].volumeInfo.title;
