@@ -8,7 +8,7 @@ class AuthController{
         const {email, password, password2, username} = req.body;
         try{
             if( await User.findOne( {email })){
-               return res.status(400).json( { error: "Usuário já existe"});
+               return res.status(400).json( { error: "Email já utilizado!"});
             }
 
             if ( password !== password2){

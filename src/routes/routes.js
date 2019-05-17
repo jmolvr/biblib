@@ -8,7 +8,7 @@ const BookController = require('../controller/bookController');
 router.use(passport.authenticate('jwt', {session:false})); //verifica se o user está logado;
 
 router.get('/books', (req, res) => {
-    //Função para receber dados dos livros.
+    //Função para retornar dados dos livros.
     res.json({msg: "/books(GET)"});
 });
 
@@ -16,13 +16,13 @@ router.post('/book', BookController.registerBook);
 
 
 router.put('/books', (req, res) => {
-    //Função para atualizar livros.
+    //Função para atualizar informações dos livros.
     res.json({msg: "/books(PUT)"});
 });
 
 
 router.get('/user', (req, res) => {
-    //retorna usuário
+    //retorna informações do usuário, inclusive livros
     res.json(req.user);
 });
 

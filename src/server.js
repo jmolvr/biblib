@@ -12,8 +12,9 @@ mongoose.connect(process.env.mongoDB || keys.mongoDB, { useNewUrlParser: true, u
     .catch(err => console.log(err));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
-app.use('/auth',require('./routes/auth_routes.js'));
-
+//rotas que não necessitam de autenticação
+app.use('/auth',require('./routes/auth_routes.js')); // rotas para se autenticar e registrar
+//rotas que necessitam de autenticação
 app.use(require('./routes/routes'));
 
 app.listen(process.env.PORT || 3333);
