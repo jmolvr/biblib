@@ -5,7 +5,7 @@ var buscarLivro = axios.create({
         url: 'https://www.googleapis.com/books/v1/volumes',
         baseURL: 'https://www.googleapis.com/books/v1/volumes',
         params: {
-            key: keys.googleBooksAPi
+            key: process.env.googleBooksAPI || keys.googleBooksAPi
         },
         // transfomResponse: [(data) => {
         //     return data.data.items;
