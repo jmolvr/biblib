@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const findOrCreate = require('mongoose-findorcreate');
 const bcrypt = require('bcryptjs');
 const keys = require('../config/keys');
+
 const UserSchema = new mongoose.Schema(
     {
         username: {
@@ -47,10 +48,7 @@ const UserSchema = new mongoose.Schema(
         },
 
         generateToken() {
-            console.log("Estou sendo chamado");
-            return jwt.sign({
-                id: this.id
-            }, process.env.secret || keys.jwt, {
+            return jwt.sign({id: this.id}, process.env.secret || keys.jwt, {
                 expiresIn: 86400
             });
         }

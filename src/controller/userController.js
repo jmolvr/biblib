@@ -66,7 +66,9 @@ class AuthController{
     }
 
     async getUser(req, res) {
-
+        let user = req.user;
+        user._id = undefined;
+        return res.json(req.user);
     }
 
     async putUser(req, res){

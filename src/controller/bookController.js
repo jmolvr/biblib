@@ -17,15 +17,17 @@ class BookController{
         //cadastrar novo livro
         const { isbn } = req.body; //pega ISBN mandado no JSON
         const livro = await BookController.buscar(isbn);
-        const id = livro[0].id;
+        const googleID = livro[0].id;
         const user = await User.findById(req.user._id); //procura o usuário que fez a requisição 
         const book = await Book.create({ //criar novo livro
-            bookID: id,
+            ownerID: req.user._id,
+            bookID: googleID,
             pagina_atual: 0,
             status: 0
         });
         user.livros.push(book); //adiciona livro na lista do user
         await user.save(); //salva usuario no db 
+        book.ownerID = undefined;
         return res.json(book); //retorna json com book novo
     }
     
@@ -41,8 +43,11 @@ class BookController{
     async getBook(req, res){
         try{
             let {id} = req.params;
-            let book = await Book.findOne({_id : id});
-            res.status(200).json(book);
+            let book = await Book.findOne({_id : id, ownerID: req.user._id});
+            if(!book){
+                return res.sendStatus(401);
+            }
+            return res.json(book);
         }catch(err){
             console.log(err);
         }
@@ -52,13 +57,16 @@ class BookController{
         try{
             let { id } = req.params;
             let {pagina_atual, status} = req.body;
-            let book = await Book.findByIdAndUpdate(id, {
+            let book = await Book.findOneAndUpdate({_id: id, ownerID: req.user._id}, {
                 pagina_atual: pagina_atual,
                 status: status,
             },
             {
                 new: true
             });
+            if(!book){
+                return res.sendStatus(401);
+            }
             res.json(book);
         }catch(err){
             console.log(err);
@@ -67,8 +75,12 @@ class BookController{
 
     async deleteBook(req, res){
         let { id } = req.params;
-        await Book.findByIdAndDelete(id);
-        res.status(200).json({msg: "Sucesso"});
+        let book = await Book.findOneAndDelete({_id: id, ownerID: req.user._id});
+        console.log(book);
+        if(book ==  null){
+            return res.sendStatus(401);
+        }
+        return res.status(200).json({msg: "Sucesso"});
     }
 }
 
