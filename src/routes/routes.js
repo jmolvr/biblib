@@ -32,7 +32,7 @@ router.put('/books/:id', BookController.updateBook);
 router.delete('/books/:id', BookController.deleteBook);
 
 //retorna um json com 4 sugestões
-router.get('/books/sugestao', buscarLivro.gerarSugestao);
+router.get('/sugestao', buscarLivro.gerarSugestao);
 
 
 

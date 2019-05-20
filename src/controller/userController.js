@@ -25,6 +25,7 @@ class AuthController{
             const token = jwt.sign({id: user.id }, process.env.secret || keys.jwt, {
                 expiresIn: 86400
             });
+            user._id = undefined;
             return res.json( { user , token});
         }catch (err) {
             return res.status(400).json({ error: "Registro falhou"});

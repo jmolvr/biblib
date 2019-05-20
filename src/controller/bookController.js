@@ -18,7 +18,7 @@ class BookController{
         const { isbn } = req.body; //pega ISBN mandado no JSON
         const livro = await BookController.buscar(isbn);
         const googleID = livro[0].id;
-        const user = await User.findById(req.user._id); //procura o usuário que fez a requisição 
+        const user = req.user;
         const book = await Book.create({ //criar novo livro
             ownerID: req.user._id,
             bookID: googleID,
