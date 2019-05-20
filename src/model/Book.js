@@ -13,8 +13,15 @@ const BookSchema = new mongoose.Schema(
         status:{
             type: Number,
             required: true,
-        }, 
+        },
+        comment:{
+            type: String,
+        } 
+    },
+    {
+        timestamps: true,
     }
+    
 );
 
 module.exports = mongoose.model("Book", BookSchema);

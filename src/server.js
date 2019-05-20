@@ -7,7 +7,7 @@ require('./config/passport-setup');
 const app = express();
 app.use(cors());
 
-mongoose.connect(process.env.mongoDB || keys.mongoDB, { useNewUrlParser: true, useCreateIndex: true})
+mongoose.connect(process.env.mongoDB || keys.mongoDB, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false})
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.log(err));
 app.use(express.json());

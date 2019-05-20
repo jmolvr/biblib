@@ -1,37 +1,39 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-
-const User = require('../model/User');
-const Book = require('../model/Book');
+const userController = require('../controller/userController');
 const BookController = require('../controller/bookController');
 const buscarLivro = require('../controller/sugestao.js');
-
+//rotas de usuários
 router.use(passport.authenticate('jwt', {session:false})); //verifica se o user está logado;
 
-router.get('/books', (req, res) => {
-    //Função para retornar dados dos livros.
-    res.json({msg: "/books(GET)"});
-});
+router.get('/users', userController.getUser);
 
-router.post('/book', BookController.registerBook);
+router.put('/users/:id', userController.putUser);
+
+router.delete('/users/:id', userController.deleteUser);
 
 
-router.put('/books', (req, res) => {
-    //Função para atualizar informações dos livros.
-    res.json({msg: "/books(PUT)"});
-});
+//rotas de livros
 
-router.post('/sugestao', buscarLivro.gerarSugestao);
+//retorna todos os livros do usuário
+router.get('/books', BookController.showBooks);
 
-router.get('/user', (req, res) => {
-    //retorna informações do usuário, inclusive livros
-    res.json(req.user);
-});
+//retorna um livro em especifico do usuário
+router.get('/books/:id', BookController.getBook);
 
-router.put('/user', (req, res) => {
-    res.json({msg: "/user(PUT)"});
-});
+//registra um novo livro
+router.post('/books', BookController.registerBook);
+
+//atualiza informações do livro
+router.put('/books/:id', BookController.updateBook);
+
+//deletar livro
+router.delete('/books/:id', BookController.deleteBook);
+
+//retorna um json com 4 sugestões
+router.get('/books/sugestao', buscarLivro.gerarSugestao);
+
 
 
 module.exports = router;

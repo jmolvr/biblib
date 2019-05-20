@@ -64,6 +64,18 @@ class AuthController{
             });
         })(req, res);
     }
+
+    async getUser(req, res) {
+
+    }
+
+    async putUser(req, res){
+
+    }
+
+    async deleteUser(req, res){
+
+    }
 }
 
 module.exports = new AuthController();
