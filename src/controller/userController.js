@@ -1,7 +1,7 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../model/User');
-const keys = require('../config/keys');
+
 
 class AuthController{
     async register(req, res){
@@ -21,11 +21,7 @@ class AuthController{
                 username: username,
             });
             user.password = undefined; 
-            //user.generateToken();
-            const token = jwt.sign({id: user.id }, process.env.secret || keys.jwt, {
-                expiresIn: 86400
-            });
-            user._id = undefined;
+            const token = await user.generateToken();
             return res.json( { user , token});
         }catch (err) {
             return res.status(400).json({ error: "Registro falhou"});
@@ -37,13 +33,12 @@ class AuthController{
             if(err || !user){
                 return res.status(400).json(info);
             }
-            req.login(user, {session: false}, (err) => {
+
+            req.login(user, {session: false}, async (err) => {
                 if(err){
                     return res.send(err);
                 }
-                const token = jwt.sign({id: user.id }, process.env.secret || keys.jwt, {
-                    expiresIn: 86400
-                });
+                const token = await user.generateToken();
                 return res.json({user, token});
             });
         })(req, res);
@@ -54,21 +49,18 @@ class AuthController{
             if(err || !user){
                 return res.status(400).json("Error");
             }
-            req.login(user, {session: false}, (err) => {
+            req.login(user, {session: false}, async(err) => {
                 if(err){
                     return res.json(err);
                 }
-                const token = jwt.sign({id: user.id}, process.env.secret || keys.jwt, {
-                    expiresIn: 86400
-                });
+                const token = await user.generateToken();
+                res.set('Content-Type', 'application/json');
                 return res.json({user, token});
             });
         })(req, res);
     }
 
     async getUser(req, res) {
-        let user = req.user;
-        user._id = undefined;
         return res.json(req.user);
     }
 

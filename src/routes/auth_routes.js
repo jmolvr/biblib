@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const AuthController = require('../controller/userController');
+const UserController = require('../controller/userController');
 /*Rotas para registro e para autenticação, assim como rotas de redirecionamento*/
 
 /*  Recebe email, password, password2 e username
@@ -10,11 +10,11 @@ const AuthController = require('../controller/userController');
     Se tudo passar, o user é criado e é retornado um json com o
     user e um token
 */
-router.post("/register", AuthController.register);
+router.post("/register", UserController.register);
 /*  O login recebe email e senha, caso passem, as informações do usuário
     e um token são enviados.
 */
-router.get("/login", AuthController.login);
+router.get("/login", UserController.login);
 /*  O logout funciona da seguinte forma:
     O cliente deve excluir o JWT
     Se o user conseguir guardar o JWT, ele poderá ter acesso ao sistema,
@@ -37,6 +37,6 @@ router.get("/google", passport.authenticate('google', {
     Aqui são verificados se o user já existe, se não ele é criado
     e é retornado o user e o JWT.
 */
-router.get('/google/redirect', AuthController.googleStrategy);
+router.get('/google/redirect', UserController.googleStrategy);
 
 module.exports = router;

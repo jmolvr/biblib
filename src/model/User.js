@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const findOrCreate = require('mongoose-findorcreate');
 const bcrypt = require('bcryptjs');
-const keys = require('../config/keys');
+const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema(
     {
@@ -27,11 +27,10 @@ const UserSchema = new mongoose.Schema(
             required: true,
             lowercase: true,
         },
-        createdAt: {
-            type: Date,
-            default: Date.now
-        },
-    livros: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book"}]
+        books: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book"}]
+    },
+    {
+        timestamps: true,
     });
     
     UserSchema.pre("save", async function (next) {
@@ -47,8 +46,8 @@ const UserSchema = new mongoose.Schema(
             return bcrypt.compare(hash, this.password);
         },
 
-        generateToken() {
-            return jwt.sign({id: this.id}, process.env.secret || keys.jwt, {
+        async generateToken() {
+            return await jwt.sign({id: this.id}, process.env.secret, {
                 expiresIn: 86400
             });
         }

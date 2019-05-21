@@ -4,8 +4,7 @@ const BookSchema = new mongoose.Schema(
     {
         ownerID :{
             type: mongoose.Schema.Types.ObjectId, 
-            ref: "User",
-            select: false
+            ref: "User"
         },
         bookID:{
             type:String,

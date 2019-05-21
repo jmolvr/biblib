@@ -1,4 +1,4 @@
-var requestBook = require('../config/axios.js'); 
+var requestBook = require('../config/googleBooksAPI'); 
 
 class Sugestao {
 
@@ -6,11 +6,11 @@ class Sugestao {
 
         let encontros = {id: new Array()};
         for (let i = 0; i < 4; i++) {
-            let random = Math.floor((Math.random() * req.user.livros.length));
-            let livro = await Sugestao.buscar(req.user.livros[random].bookID);
+            let random = Math.floor((Math.random() * req.user.books.length));
+            let livro = await Sugestao.buscar(req.user.books[random].bookID);
             if (livro !== 1) {
                 let author = livro[0].volumeInfo.authors;
-                let title = livro[0].volumeInfo.title;
+                //let title = livro[0].volumeInfo.title;
                 random = Math.floor((Math.random() * author.length));
                 let aux = await Sugestao.buscar(author[random]);
                 random = Math.floor((Math.random() * aux.length));

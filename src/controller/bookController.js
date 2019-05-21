@@ -1,11 +1,11 @@
 const Book = require('../model/Book');
 const User = require('../model/User');
-const requestBook = require('../config/axios.js');
+const requestBook = require('../config/googleBooksAPI');
 
 class BookController{
-    static async buscar(id) {
+    static async buscar(isbn) {
         try {
-            let res = await requestBook({params: {q: id}});
+            let res = await requestBook({params: {q: isbn}});
             return res.data.items;
         } catch (err) {
             console.log(err.message, err.statusText);
@@ -15,26 +15,27 @@ class BookController{
 
     async registerBook(req, res){
         //cadastrar novo livro
-        const { isbn } = req.body; //pega ISBN mandado no JSON
-        const livro = await BookController.buscar(isbn);
-        const googleID = livro[0].id;
-        const user = req.user;
-        const book = await Book.create({ //criar novo livro
+        const { isbn } = req.body; //pega ISBN da req
+        const livro = await BookController.buscar(isbn); 
+        const googleID = livro[0].id; //primeiro resultado
+        const user = req.user; //resgata user que fez a req
+        //cria novo livro
+        const book = await Book.create({ 
             ownerID: req.user._id,
             bookID: googleID,
             pagina_atual: 0,
             status: 0
         });
-        user.livros.push(book); //adiciona livro na lista do user
-        await user.save(); //salva usuario no db 
-        book.ownerID = undefined;
-        return res.json(book); //retorna json com book novo
+        user.books.push(book); //adiciona livro na lista do user
+        await user.save(); //salva usuario no db com novo livro
+        book.ownerID = undefined; // retira a informação do id do dono do livro
+        return res.json(book); //retorna json com novo livro
     }
     
     async showBooks(req, res){
         try{
-            let books = req.user.livros;
-            res.json(books);
+            let books = req.user.books; //pega todos os livros do user
+            res.json(books); //e devolve a lista como resposta
         }catch(err){
             console.log(err);
         }
@@ -42,10 +43,11 @@ class BookController{
 
     async getBook(req, res){
         try{
-            let {id} = req.params;
+            let { id } = req.params; //pega id do livro requisitado
+            //procura o livro e verifica se pertecence ao user atual
             let book = await Book.findOne({_id : id, ownerID: req.user._id});
             if(!book){
-                return res.sendStatus(401);
+                return res.sendStatus(400);
             }
             return res.json(book);
         }catch(err){
@@ -65,7 +67,7 @@ class BookController{
                 new: true
             });
             if(!book){
-                return res.sendStatus(401);
+                return res.sendStatus(400);
             }
             res.json(book);
         }catch(err){
@@ -76,11 +78,10 @@ class BookController{
     async deleteBook(req, res){
         let { id } = req.params;
         let book = await Book.findOneAndDelete({_id: id, ownerID: req.user._id});
-        console.log(book);
         if(book ==  null){
-            return res.sendStatus(401);
+            return res.sendStatus(400);
         }
-        return res.status(200).json({msg: "Sucesso"});
+        return res.sendStatus(200);
     }
 }
 
