@@ -6,9 +6,6 @@ var buscarLivro = axios.create({
         params: {
             key: process.env.googleBooksAPI
         },
-        // transfomResponse: [(data) => {
-        //     return data.data.items;
-        // }]
     }
 );
 

@@ -1,6 +1,8 @@
 const Book = require('../model/Book');
 const User = require('../model/User');
 const requestBook = require('../config/googleBooksAPI');
+const requestCover = require('../config/goodReadsAPI');
+
 
 class BookController{
     static async buscar(isbn) {
@@ -11,7 +13,16 @@ class BookController{
             console.log(err.message, err.statusText);
             return 1;
         }
-    }      
+    }
+
+    static async getCapa(isbn) {
+        try {
+            const urlCover = await requestCover({params: {q: isbn}});
+            return urlCover.data;
+        } catch (err) {
+            console.warn('erro capa', err.message, err.statusText); 
+        }
+    }       
 
     async registerBook(req, res){
         //cadastrar novo livro
