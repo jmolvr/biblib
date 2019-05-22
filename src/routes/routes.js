@@ -1,17 +1,18 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const userController = require('../controller/userController');
+const UserController = require('../controller/UserController');
 const BookController = require('../controller/bookController');
-const buscarLivro = require('../controller/sugestao.js');
+const SugestaoController = require('../controller/sugestaoController');
+
 //rotas de usuários
 router.use(passport.authenticate('jwt', {session:false})); //verifica se o user está logado;
 
-router.get('/users', userController.getUser);
+router.get('/users', UserController.getUser);
 
-router.put('/users/:id', userController.putUser);
+router.put('/users/:id', UserController.putUser);
 
-router.delete('/users/:id', userController.deleteUser);
+router.delete('/users/:id', UserController.deleteUser);
 
 
 //rotas de livros
@@ -32,7 +33,7 @@ router.put('/books/:id', BookController.updateBook);
 router.delete('/books/:id', BookController.deleteBook);
 
 //retorna um json com 4 sugestões
-router.get('/sugestao', buscarLivro.gerarSugestao);
+router.get('/sugestao', SugestaoController.gerarSugestao);
 
 
 

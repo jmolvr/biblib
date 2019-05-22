@@ -6,7 +6,6 @@ const ExtractJWT = passportJWT.ExtractJwt;
 const JWTStrategy = passportJWT.Strategy;
 
 const User = require('../model/User');
-const keys = require('./keys');
 
 passport.use(
      new LocalStrategy(
@@ -21,9 +20,7 @@ passport.use(
                 if(!(await user.compareHash(password))){
                     return done(null, false, {msg: "Senha incorreta"});
                 }
-                
                 user.password = undefined;
-                
                 return done(null, user);
             }catch(err){
                 return done(err);
@@ -35,8 +32,8 @@ passport.use(
 passport.use(
     new GoogleStrategy({
         callbackURL: '/auth/google/redirect',
-        clientID: process.env.googleClientID || keys.googleClientID,
-        clientSecret: process.env.googleClientSecret || keys.googleClientIDSecret
+        clientID: process.env.googleClientID,
+        clientSecret: process.env.googleClientSecret
     }, 
     async (accessToken, refreshToken, profile, done) => {
         User.findOrCreate({
@@ -45,9 +42,10 @@ passport.use(
             username: profile.displayName
         }, (err, user) => {
             if(err){
-                console.log(err);
                 return done(err);
             }
+            user._id = undefined;
+            user.googleID - undefined;
             return done(null, user);
         })
     })
@@ -57,10 +55,10 @@ passport.use(
 passport.use(
     new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey: process.env.secret || keys.jwt,
+        secretOrKey: process.env.secret,
     }, 
     (jwtPayload, cb) => {
-        return User.findById(jwtPayload.id).populate('livros')
+        return User.findById(jwtPayload.id).populate('books')
         .then(user => {
             return cb(null, user);
         })
