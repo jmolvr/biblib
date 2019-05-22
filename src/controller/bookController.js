@@ -3,6 +3,7 @@ const User = require('../model/User');
 const requestBook = require('../config/googleBooksAPI');
 const requestCover = require('../config/goodReadsAPI');
 
+
 class BookController{
     static async buscar(isbn) {
         try {
