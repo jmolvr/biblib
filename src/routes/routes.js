@@ -10,9 +10,9 @@ router.use(passport.authenticate('jwt', {session:false})); //verifica se o user 
 
 router.get('/users', UserController.getUser);
 
-router.put('/users/:id', UserController.putUser);
+router.put('/users', UserController.putUser);
 
-router.delete('/users/:id', UserController.deleteUser);
+router.delete('/users', UserController.deleteUser);
 
 
 //rotas de livros

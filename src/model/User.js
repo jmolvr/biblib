@@ -40,6 +40,10 @@ const UserSchema = new mongoose.Schema(
 
         next();
     });
+    
+    UserSchema.pre('remove', async function (next) {
+        next();
+    })
 
     UserSchema.methods = {
         compareHash(hash){

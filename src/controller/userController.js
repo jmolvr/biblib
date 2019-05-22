@@ -65,11 +65,24 @@ class AuthController{
     }
 
     async putUser(req, res){
-
+        let id = req.user._id;
+        let { username, descricao} = req.body;
+        let user = await User.findByIdAndUpdate(id,{
+            username: username,
+            descricao: descricao,
+        },
+        {
+            new: true,
+        });
+        if(!user) return sendStatus(400);
+        return res.json(user);
     }
 
     async deleteUser(req, res){
-
+        let id = req.user._id;
+        let user = await User.findByIdAndDelete(id);
+        if(!user) return res.sendStatus(400);
+        return res.sendStatus(200);
     }
 }
 

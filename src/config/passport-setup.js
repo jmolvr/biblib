@@ -12,7 +12,10 @@ passport.use(
          {usernameField: 'email'}, 
         async (email, password, done) => {
             try{
-                const user = await User.findOne({ email: email}).select('+password').populate('livros');
+                const user = await User.findOne({ email: email}).select('+password').populate({
+                    path: 'books',
+                    options: { sort: {updateAt: -1}},
+                });
                 if(!user){
                     return done(null, false, { msg: "O email não está registrado"});
                 }
@@ -58,7 +61,10 @@ passport.use(
         secretOrKey: process.env.secret,
     }, 
     (jwtPayload, cb) => {
-        return User.findById(jwtPayload.id).populate('books')
+        return User.findById(jwtPayload.id).populate({
+            path: 'books',
+            options: { sort: {updateAt: -1}},
+        })
         .then(user => {
             return cb(null, user);
         })
