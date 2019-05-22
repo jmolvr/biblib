@@ -20,7 +20,13 @@ const BookSchema = new mongoose.Schema(
         },
         comment:{
             type: String,
-        } 
+        },
+        coverLarge: {
+            type: String
+        },
+        coverSmall: {
+            type:String,
+        }
     },
     {
         timestamps: true,

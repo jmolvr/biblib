@@ -28,14 +28,18 @@ class BookController{
         //cadastrar novo livro
         const { isbn } = req.body; //pega ISBN da req
         const livro = await BookController.buscar(isbn); 
+        if(!livro) return res.status(400).json({msg: "Livro não encontrado"});
         const googleID = livro[0].id; //primeiro resultado
+        const coverURL = await BookController.getCapa(isbn);
         const user = req.user; //resgata user que fez a req
         //cria novo livro
         const book = await Book.create({ 
             ownerID: req.user._id,
             bookID: googleID,
             pagina_atual: 0,
-            status: 0
+            status: 0,
+            coverLarge: coverURL.image.image_url,
+            coverSmall: coverURL.image.small_image_url,
         });
         user.books.push(book); //adiciona livro na lista do user
         await user.save(); //salva usuario no db com novo livro
