@@ -4,7 +4,7 @@ class Sugestao {
 
     async gerarSugestao(req, res) {
 
-        let encontros = {id: new Array()};
+        let encontros = {books: new Array()};
         for (let i = 0; i < 4; i++) {
             let random = Math.floor((Math.random() * req.user.books.length));
             let livro = await Sugestao.buscar(req.user.books[random].bookID);
@@ -14,8 +14,8 @@ class Sugestao {
                 random = Math.floor((Math.random() * author.length));
                 let aux = await Sugestao.buscar(author[random]);
                 random = Math.floor((Math.random() * aux.length));
-                if (encontros.id.indexOf(aux[random].id) === -1) {
-                    encontros.id.push(aux[random].id);
+                if (encontros.books.indexOf(aux[random].id) === -1) {
+                    encontros.books.push({id: aux[random].id});
                 } else {
                     i--;
                 }
