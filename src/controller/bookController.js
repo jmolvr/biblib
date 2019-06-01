@@ -42,7 +42,17 @@ class BookController{
             if (!livro) return res.status(400).json({
                 msg: "Livro não encontrado"
             });
-            const coverURL = await BookController.getCapa(isbn);
+            let coverURL;
+            if (livro[0].volumeInfo.imageLinks == undefined) {
+                coverURL = await BookController.getCapa(isbn);
+            } else {
+                coverURL = {   
+                    image: {
+                        image_url: livro[0].volumeInfo.imageLinks.thumbnail,
+                        small_image_url: livro[0].volumeInfo.imageLinks.smallThumbnail
+                    }
+                };
+            }
             //cria novo livro
             const book = await Book.create({
                 ownerID: user._id,

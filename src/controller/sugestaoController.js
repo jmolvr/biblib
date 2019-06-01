@@ -1,4 +1,5 @@
-var requestBook = require('../config/googleBooksAPI'); 
+const requestBook = require('../config/googleBooksAPI');
+const requestCover = require('../config/goodReadsAPI');
 
 class Sugestao {
 
@@ -11,21 +12,49 @@ class Sugestao {
                 let livro = await Sugestao.buscar(req.user.books[random].bookID);
                 if (livro !== undefined) {
                     let author = livro[0].volumeInfo.authors;
-                    //let title = livro[0].volumeInfo.title;
                     random = Math.floor((Math.random() * author.length));
                     let aux = await Sugestao.buscar(author[random]);
-                    do {
+                    do {                        
                         random = Math.floor((Math.random() * aux.length));
-                        if (encontros.books.indexOf(aux[random].id) === -1 && aux[random].volumeInfo.language === "pt") {
-                            encontros.books.push({
-                                id: aux[random].id,
-                                title: aux[random].volumeInfo.title,
-                                subtitle: aux[random].volumeInfo.subtitle,
-                                authors: aux[random].volumeInfo.authors,
-                                publisher: aux[random].volumeInfo.publisher,
-                                description: aux[random].volumeInfo.description,
-                                pageCount: aux[random].volumeInfo.pageCount
-                            });
+                        const teste = encontros.books.findIndex( (data) => {
+                            return data.id.indexOf(aux[random].id) !== -1;
+                        });
+                        if (teste === -1 && aux[random].volumeInfo.language === "pt") {
+                            let coverURL;
+                            if (aux[random].volumeInfo.imageLinks == undefined) {
+                                let temp;
+                                for (let a of aux[random].volumeInfo.industryIdentifiers) {
+                                    temp = await requestCover({ params: { q : a.identifier }});
+                                    if (temp != undefined) {
+                                        break;
+                                    }
+                                }
+                                if (temp == undefined) {
+                                    console.warn("Erro ao encontrar isbn");
+                                    break;
+                                }
+                                coverURL = temp.data;
+                            } else {
+                                coverURL = {   
+                                    image: {
+                                        image_url: aux[random].volumeInfo.imageLinks.thumbnail,
+                                        small_image_url: aux[random].volumeInfo.imageLinks.smallThumbnail
+                                    }
+                                };
+                            }
+                            encontros.books.push(
+                                {
+                                    id: aux[random].id,
+                                    title: aux[random].volumeInfo.title,
+                                    subtitle: aux[random].volumeInfo.subtitle,
+                                    authors: aux[random].volumeInfo.authors,
+                                    publisher: aux[random].volumeInfo.publisher,
+                                    description: aux[random].volumeInfo.description,
+                                    pageCount: aux[random].volumeInfo.pageCount,
+                                    coverLarge: coverURL.image.image_url,
+                                    coverSmall: coverURL.image.small_image_url
+                                }
+                            );
                             break;
                         }
                     } while (true);
@@ -35,7 +64,7 @@ class Sugestao {
             }
             return res.json(encontros);
         } catch(err) {
-            res.status(400).json({msg: "Erro ao gerar sugestão"});
+            res.status(400).json({msg: "2 Erro ao gerar sugestão"});
         }
     }
 
