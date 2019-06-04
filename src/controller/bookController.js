@@ -98,10 +98,11 @@ class BookController{
     async updateBook(req, res){
         try{
             let { id } = req.params;
-            let {pagina_atual, status} = req.body;
+            let {pagina_atual, status, comment} = req.body;
             let book = await Book.findOneAndUpdate({_id: id, ownerID: req.user._id}, {
                 pagina_atual: pagina_atual,
                 status: status,
+                comment: comment,
             },
             {
                 new: true
