@@ -4,22 +4,29 @@ const requestCover = require('../config/goodReadsAPI');
 class Sugestao {
 
     async gerarSugestao(req, res) {
-
         try {
             let encontros = {books: new Array()};
             for (let i = 0; i < 4; i++) {
                 let random = Math.floor((Math.random() * req.user.books.length));
                 let livro = await Sugestao.buscar(req.user.books[random].bookID);
                 if (livro !== undefined) {
-                    let author = livro[0].volumeInfo.authors;
-                    random = Math.floor((Math.random() * author.length));
-                    let aux = await Sugestao.buscar(author[random]);
+                    let parametro;
+                    parametro = livro[0].volumeInfo.authors;
+                    if (parametro == undefined) {
+                        continue;
+                    }
+                    random = Math.floor((Math.random() * parametro.length));
+                    let aux = await Sugestao.buscar(parametro[random]);
+                    let controle = 0;
+                    if (aux == undefined) {
+                        continue;
+                    }
                     do {                        
                         random = Math.floor((Math.random() * aux.length));
                         const teste = encontros.books.findIndex( (data) => {
                             return data.id.indexOf(aux[random].id) !== -1;
                         });
-                        if (teste === -1 && aux[random].volumeInfo.language === "pt") {
+                        if (teste === -1) {
                             let coverURL;
                             if (aux[random].volumeInfo.imageLinks == undefined) {
                                 let temp;
@@ -57,24 +64,29 @@ class Sugestao {
                             );
                             break;
                         }
-                    } while (true);
+                        controle++;
+                    } while (controle < 4);
                 } else {
-                    return res.status(400).json({msg: "1 Erro ao gerar sugestão"});
+                    console.warn("Livro não encontrado");
                 }
             }
             return res.json(encontros);
         } catch(err) {
-            res.status(400).json({msg: "2 Erro ao gerar sugestão"});
+            res.status(400).json(err.message);
         }
     }
 
     static async buscar(id) {
         try {
-            let res = await requestBook({params: {q: id}});
-            return res.data.items;
-    
+            let resposta = undefined; 
+            resposta = await requestBook({params: {q: id}});
+            if (resposta != undefined) {
+                return resposta.data.items;
+            } else {
+                return undefined;
+            }    
         } catch (err) {
-            return res.status(400).json({msg: "Livro não encontrado"});
+            console.warn("Livro não encontrado");
         }
     } 
 }
