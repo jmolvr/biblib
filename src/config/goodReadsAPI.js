@@ -19,8 +19,8 @@ var buscarLivro = axios.create({
             } else {
                 const image = {   
                     image: {
-                        image_url: undefined,
-                        small_image_url: undefined
+                        image_url: "https://cdn.discordapp.com/attachments/549765199968600069/584156996316692500/splash.png",
+                        small_image_url: "https://cdn.discordapp.com/attachments/549765199968600069/584156996316692500/splash.png"
                     }
                 }
 			    return image;
