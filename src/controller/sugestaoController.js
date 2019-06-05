@@ -40,7 +40,16 @@ class Sugestao {
                                     console.warn("Erro ao encontrar isbn");
                                     break;
                                 }
-                                coverURL = temp.data;
+                                if (temp.image == undefined) {
+                                    coverURL = {
+                                            image: {
+                                            image_url: "https://cdn.discordapp.com/attachments/549765199968600069/584156996316692500/splash.png",
+                                            small_image_url: "https://cdn.discordapp.com/attachments/549765199968600069/584156996316692500/splash.png"
+                                        }
+                                    }
+                                } else {
+                                    coverURL = temp.data;
+                                }
                             } else {
                                 coverURL = {   
                                     image: {
